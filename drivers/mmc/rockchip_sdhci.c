@@ -368,6 +368,7 @@ static int rk3568_sdhci_config_dll(struct sdhci_host *host, u32 clock, bool enab
 		 * Disable DLL and reset both of sample and drive clock.
 		 * The bypass bit and start bit need to be set if DLL is not locked.
 		 */
+		sdhci_writel(host, 0, DWCMSHC_EMMC_DLL_CTRL);
 		extra = DWCMSHC_EMMC_DLL_BYPASS | DWCMSHC_EMMC_DLL_START;
 		sdhci_writel(host, extra, DWCMSHC_EMMC_DLL_CTRL);
 		sdhci_writel(host, DLL_RXCLK_ORI_GATE, DWCMSHC_EMMC_DLL_RXCLK);
