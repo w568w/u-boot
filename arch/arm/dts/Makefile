@@ -126,6 +126,7 @@ dtb-$(CONFIG_ROCKCHIP_RK3308) += \
 dtb-$(CONFIG_ROCKCHIP_RK3328) += \
 	rk3328-evb.dtb \
 	rk3328-nanopi-r2c.dtb \
+	rk3328-nanopi-r2c-plus.dtb \
 	rk3328-nanopi-r2s.dtb \
 	rk3328-orangepi-r1-plus.dtb \
 	rk3328-orangepi-r1-plus-lts.dtb \
@@ -200,6 +201,7 @@ dtb-$(CONFIG_ROCKCHIP_RK3588) += \
 	rk3588s-orangepi-5.dtb \
 	rk3588-orangepi-5-plus.dtb \
 	rk3588-quartzpro64.dtb \
+	rk3588-turing-rk1.dtb \
 	rk3588s-rock-5a.dtb \
 	rk3588-rock-5b.dtb
 
@@ -1366,10 +1368,10 @@ dtb-$(CONFIG_ASPEED_AST2600) += ast2600-evb.dtb
 
 dtb-$(CONFIG_ARCH_STI) += stih410-b2260.dtb
 
-dtb-$(CONFIG_STM32MP13x) += \
+dtb-$(CONFIG_STM32MP13X) += \
 	stm32mp135f-dk.dtb
 
-dtb-$(CONFIG_STM32MP15x) += \
+dtb-$(CONFIG_STM32MP15X) += \
 	stm32mp157a-dk1.dtb \
 	stm32mp157a-dk1-scmi.dtb \
 	stm32mp157a-icore-stm32mp1-ctouch2.dtb \
