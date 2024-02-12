@@ -13,6 +13,7 @@
 #include <cpu_func.h>
 #include <dm.h>
 #include <errno.h>
+#include <eth_phy.h>
 #include <log.h>
 #include <miiphy.h>
 #include <malloc.h>
@@ -576,12 +577,18 @@ static int dw_phy_init(struct dw_eth_dev *priv, void *dev)
 	struct phy_device *phydev;
 	int ret;
 
+	if (IS_ENABLED(CONFIG_DM_ETH_PHY))
+		eth_phy_set_mdio_bus(dev, NULL);
+
 #if IS_ENABLED(CONFIG_DM_MDIO)
 	phydev = dm_eth_phy_connect(dev);
 	if (!phydev)
 		return -ENODEV;
 #else
 	int phy_addr = -1;
+
+	if (IS_ENABLED(CONFIG_DM_ETH_PHY))
+		phy_addr = eth_phy_get_addr(dev);
 
 #ifdef CONFIG_PHY_ADDR
 	phy_addr = CONFIG_PHY_ADDR;
@@ -702,7 +709,6 @@ int designware_eth_probe(struct udevice *dev)
 			err = clk_enable(&priv->clocks[i]);
 			if (err && err != -ENOSYS && err != -ENOTSUPP) {
 				pr_err("failed to enable clock %d\n", i);
-				clk_free(&priv->clocks[i]);
 				goto clk_err;
 			}
 			priv->clock_count++;

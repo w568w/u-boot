@@ -11,6 +11,7 @@
 #include <errno.h>
 #include <log.h>
 #include <asm/global_data.h>
+#include <asm/sbi.h>
 #include <dm/device-internal.h>
 #include <dm/lists.h>
 #include <linux/bitops.h>
@@ -45,7 +46,6 @@ static int riscv_cpu_get_info(const struct udevice *dev, struct cpu_info *info)
 		ret = clk_get_rate(&clk);
 		if (!IS_ERR_VALUE(ret))
 			info->cpu_freq = ret;
-		clk_free(&clk);
 	}
 
 	if (!info->cpu_freq)
@@ -95,13 +95,24 @@ static int riscv_cpu_bind(struct udevice *dev)
 	struct cpu_plat *plat = dev_get_parent_plat(dev);
 	struct driver *drv;
 	int ret;
+	long mvendorid;
 
 	/* save the hart id */
 	plat->cpu_id = dev_read_addr(dev);
+	/* provide data for SMBIOS */
 	if (IS_ENABLED(CONFIG_64BIT))
 		plat->family = 0x201;
 	else
 		plat->family = 0x200;
+	if (CONFIG_IS_ENABLED(RISCV_SMODE)) {
+		/*
+		 * For RISC-V CPUs the SMBIOS Processor ID field contains
+		 * the Machine Vendor ID from CSR mvendorid.
+		 */
+		ret = sbi_get_mvendorid(&mvendorid);
+		if (!ret)
+			plat->id[0] = mvendorid;
+	}
 	/* first examine the property in current cpu node */
 	ret = dev_read_u32(dev, "timebase-frequency", &plat->timebase_freq);
 	/* if not found, then look at the parent /cpus node */
@@ -145,7 +156,6 @@ static int riscv_cpu_probe(struct udevice *dev)
 		return 0;
 
 	ret = clk_enable(&clk);
-	clk_free(&clk);
 	if (ret == -ENOSYS || ret == -ENOTSUPP)
 		return 0;
 	else

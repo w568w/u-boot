@@ -186,6 +186,7 @@ dtb-$(CONFIG_ROCKCHIP_RK3568) += \
 	rk3566-soquartz-model-a.dtb \
 	rk3568-bpi-r2-pro.dtb \
 	rk3568-evb.dtb \
+	rk3568-generic.dtb \
 	rk3568-lubancat-2.dtb \
 	rk3568-nanopi-r5c.dtb \
 	rk3568-nanopi-r5s.dtb \
@@ -843,6 +844,7 @@ dtb-$(CONFIG_MACH_SUN50I_H6) += \
 dtb-$(CONFIG_MACH_SUN50I_H616) += \
 	sun50i-h616-orangepi-zero2.dtb \
 	sun50i-h618-orangepi-zero3.dtb \
+	sun50i-h618-transpeed-8k618-t.dtb \
 	sun50i-h616-x96-mate.dtb
 dtb-$(CONFIG_MACH_SUN50I) += \
 	sun50i-a64-amarula-relic.dtb \
@@ -1134,7 +1136,8 @@ dtb-$(CONFIG_ARCH_IMX8M) += \
 
 dtb-$(CONFIG_ARCH_IMX9) += \
 	imx93-11x11-evk.dtb \
-	imx93-var-som-symphony.dtb
+	imx93-var-som-symphony.dtb \
+	imx93-phyboard-segin.dtb
 
 dtb-$(CONFIG_ARCH_IMXRT) += imxrt1050-evk.dtb \
 	imxrt1020-evk.dtb \
@@ -1174,7 +1177,8 @@ dtb-$(CONFIG_RCAR_GEN3) += \
 dtb-$(CONFIG_RCAR_GEN4) += \
 	r8a779a0-falcon-u-boot.dtb \
 	r8a779f0-spider-u-boot.dtb \
-	r8a779g0-white-hawk-u-boot.dtb
+	r8a779g0-white-hawk-u-boot.dtb \
+	r8a779h0-gray-hawk-u-boot.dtb
 
 dtb-$(CONFIG_TARGET_RZG2L) += \
 	r9a07g044l2-smarc.dts

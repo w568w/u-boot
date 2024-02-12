@@ -678,7 +678,7 @@ config ARCH_BCMBCA
 config TARGET_VEXPRESS_CA9X4
 	bool "Support vexpress_ca9x4"
 	select CPU_V7A
-	select PL011_SERIAL
+	select PL01X_SERIAL
 
 config TARGET_BCMNS
 	bool "Support Broadcom Northstar"
@@ -785,15 +785,21 @@ config ARCH_IPQ40XX
 
 config ARCH_KEYSTONE
 	bool "TI Keystone"
+	select CMD_DDR3
 	select CMD_POWEROFF
 	select CPU_V7A
 	select DDR_SPD
+	select SPL_BOARD_INIT if SPL
 	select SUPPORT_SPL
 	select SYS_ARCH_TIMER
 	select SYS_THUMB_BUILD
 	imply CMD_MTDPARTS
+	imply CMD_NFS
 	imply CMD_SAVES
+	imply DM_I2C
 	imply FIT
+	imply SOC_TI
+	imply TI_KEYSTONE_SERDES
 
 config ARCH_K3
 	bool "Texas Instruments' K3 Architecture"
@@ -1160,14 +1166,14 @@ config ARCH_SUNXI
 	select SPL_SEPARATE_BSS if SPL
 	select SPL_STACK_R if SPL
 	select SPL_SYS_MALLOC_SIMPLE if SPL
-	select SPL_SYS_THUMB_BUILD if !ARM64
+	select SPL_SYS_THUMB_BUILD if SPL && !ARM64
 	select SUNXI_GPIO
 	select SYS_NS16550
 	select SYS_THUMB_BUILD if !ARM64
 	select USB if DISTRO_DEFAULTS
 	select USB_KEYBOARD if DISTRO_DEFAULTS && USB_HOST
 	select USB_STORAGE if DISTRO_DEFAULTS && USB_HOST
-	select SPL_USE_TINY_PRINTF
+	select SPL_USE_TINY_PRINTF if SPL
 	select USE_PREBOOT
 	select SYS_RELOC_GD_ENV_ADDR
 	imply BOARD_LATE_INIT

@@ -5,15 +5,8 @@
 
 #include "rk3588s-u-boot.dtsi"
 
-/ {
-	chosen {
-		u-boot,spl-boot-order = "same-as-spl", &sdmmc, &sdhci;
-	};
-};
-
 &sdhci {
 	cap-mmc-highspeed;
-	mmc-ddr-1_8v;
 	mmc-hs200-1_8v;
 };
 		enable-active-high;

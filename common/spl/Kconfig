@@ -97,8 +97,7 @@ config SPL_PAD_TO
 	default 0x31000 if ARCH_MX6 && MX6_OCRAM_256KB
 	default 0x11000 if ARCH_MX7 || (ARCH_MX6 && !MX6_OCRAM_256KB)
 	default 0x10000 if ARCH_KEYSTONE
-	default 0x8000 if ARCH_SUNXI && !MACH_SUN50I_H616
-	default 0x0 if ARCH_MTMIPS
+	default 0x0 if ARCH_MTMIPS || ARCH_SUNXI
 	default TPL_MAX_SIZE if TPL_MAX_SIZE > SPL_MAX_SIZE
 	default SPL_MAX_SIZE
 	help
@@ -372,7 +371,8 @@ config SPL_SHARES_INIT_SP_ADDR
 
 config SPL_STACK
 	hex "Initial stack pointer location"
-	depends on (ARM || ARCH_JZ47XX || MICROBLAZE || RISCV) && SPL_FRAMEWORK
+	depends on (ARM || ARCH_JZ47XX || MICROBLAZE || RISCV) && \
+		SPL_FRAMEWORK || ROCKCHIP_RK3036
 	depends on !SPL_SHARES_INIT_SP_ADDR
 	default 0x946bb8 if ARCH_MX7
 	default 0x93ffb8 if ARCH_MX6 && MX6_OCRAM_256KB
@@ -585,8 +585,7 @@ config SYS_MMCSD_RAW_MODE_EMMC_BOOT_PARTITION
 config SPL_FIT_IMAGE_TINY
 	bool "Remove functionality from SPL FIT loading to reduce size"
 	depends on SPL_FIT
-	default y if MACH_SUN50I || MACH_SUN50I_H5 || SUN50I_GEN_H6
-	default y if ARCH_IMX8M || ARCH_IMX9
+	default y if ARCH_IMX8M || ARCH_IMX9 || ARCH_SUNXI
 	help
 	  Enable this to reduce the size of the FIT image loading code
 	  in SPL, if space for the SPL binary is very tight.
@@ -1115,7 +1114,7 @@ config SPL_OS_BOOT
 
 config SPL_PAYLOAD_ARGS_ADDR
 	hex "Address in memory to load 'args' file for Falcon Mode to"
-	depends on SPL_OS_BOOT
+	depends on SPL_OS_BOOT || SPL_LOAD_FIT_OPENSBI_OS_BOOT
 	default 0x88000000 if ARCH_OMAP2PLUS
 	help
 	  Address in memory where the 'args' file, typically a device tree

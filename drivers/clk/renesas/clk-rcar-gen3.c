@@ -10,7 +10,6 @@
  * Copyright (C) 2016 Glider bvba
  */
 
-#include <common.h>
 #include <clk-uclass.h>
 #include <dm.h>
 #include <dm/device-internal.h>
@@ -306,6 +305,12 @@ static u64 gen3_clk_get_rate64(struct clk *clk)
 						0, gen4_pll_config->pll6_mult,
 						gen4_pll_config->pll6_div,
 						"PLL6");
+
+	case CLK_TYPE_GEN4_PLL7:
+		return gen3_clk_get_rate64_pll_mul_reg(priv, &parent,
+						0, gen4_pll_config->pll7_mult,
+						gen4_pll_config->pll7_div,
+						"PLL7");
 
 	case CLK_TYPE_FF:
 		return gen3_clk_get_rate64_pll_mul_reg(priv, &parent,
