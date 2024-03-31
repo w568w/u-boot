@@ -32,7 +32,6 @@
 &sdhci {
 	cap-mmc-highspeed;
 	mmc-hs200-1_8v;
-	/delete-property/ mmc-hs400-1_8v;
 };
 
 &sfc {

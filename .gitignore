@@ -49,6 +49,7 @@ fit-dtb.blob*
 /simple-bin*
 /u-boot*
 /*.log
+/generated_defconfig
 
 #
 # git files that we don't want to ignore even it they are dot-files
