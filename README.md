@@ -16,12 +16,12 @@ $ ./orangepi-3b-build.sh
 You only need the built `u-boot-rockchip.bin` file:
 
 ```bash
-$ dd if=u-boot-rockchip.bin of=<your-sd-card> seek=64
-$ sync
+# dd if=u-boot-rockchip.bin of=<your-sd-card> seek=64
+# sync
 ```
 
-## You are falling back to the mainline U-Boot!
-Okay, you can keep up with the mainline U-Boot by:
+## Hey, you have fallen behind the mainline U-Boot!
+Okay, you can keep up with the mainline by:
 
 ```bash
 $ git remote add upstream https://github.com/u-boot/u-boot
