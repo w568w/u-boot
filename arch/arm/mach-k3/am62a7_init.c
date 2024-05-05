@@ -31,7 +31,7 @@ static void store_boot_info_from_rom(void)
 	bootindex = *(u32 *)(CONFIG_SYS_K3_BOOT_PARAM_TABLE_INDEX);
 
 	if (IS_ENABLED(CONFIG_CPU_V7R)) {
-		memcpy(&bootdata, (uintptr_t *)ROM_ENTENDED_BOOT_DATA_INFO,
+		memcpy(&bootdata, (uintptr_t *)ROM_EXTENDED_BOOT_DATA_INFO,
 		       sizeof(struct rom_extended_boot_data));
 	}
 }
@@ -128,6 +128,9 @@ void board_init_f(ulong dummy)
 		panic("ROM has not loaded TIFS firmware\n");
 
 	k3_sysfw_loader(true, NULL, NULL);
+
+	/* Disable ROM configured firewalls right after loading sysfw */
+	remove_fwl_configs(cbass_main_fwls, ARRAY_SIZE(cbass_main_fwls));
 #endif
 
 #if defined(CONFIG_CPU_V7R)
@@ -155,9 +158,6 @@ void board_init_f(ulong dummy)
 
 	/* Output System Firmware version info */
 	k3_sysfw_print_ver();
-
-       /* Disable ROM configured firewalls right after loading sysfw */
-       remove_fwl_configs(cbass_main_fwls, ARRAY_SIZE(cbass_main_fwls));
 
 #if defined(CONFIG_K3_AM62A_DDRSS)
 	ret = uclass_get_device(UCLASS_RAM, 0, &dev);

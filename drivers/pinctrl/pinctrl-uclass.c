@@ -115,6 +115,7 @@ static bool ofnode_pre_reloc_recursive(ofnode parent)
 
 	return false;
 }
+
 /**
  * pinconfig_post_bind() - post binding for PINCONFIG uclass
  * Recursively bind its children as pinconfig devices.

@@ -14,7 +14,6 @@
 #include <asm/arch-rockchip/cru_rk3588.h>
 #include <asm/arch-rockchip/clock.h>
 #include <asm/arch-rockchip/hardware.h>
-#include <asm/io.h>
 #include <dm/device-internal.h>
 #include <dm/lists.h>
 #include <dt-bindings/clock/rockchip,rk3588-cru.h>
@@ -1570,6 +1569,9 @@ static ulong rk3588_clk_get_rate(struct clk *clk)
 	case DCLK_DECOM:
 		rate = rk3588_mmc_get_clk(priv, clk->id);
 		break;
+	case REF_CLK_USB3OTG0:
+	case REF_CLK_USB3OTG1:
+	case REF_CLK_USB3OTG2:
 	case TMCLK_EMMC:
 	case TCLK_WDT0:
 		rate = OSC_HZ;
@@ -1735,6 +1737,9 @@ static ulong rk3588_clk_set_rate(struct clk *clk, ulong rate)
 	case DCLK_DECOM:
 		ret = rk3588_mmc_set_clk(priv, clk->id, rate);
 		break;
+	case REF_CLK_USB3OTG0:
+	case REF_CLK_USB3OTG1:
+	case REF_CLK_USB3OTG2:
 	case TMCLK_EMMC:
 	case TCLK_WDT0:
 		ret = OSC_HZ;

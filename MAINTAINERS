@@ -55,6 +55,7 @@ M:	Simon Glass <sjg@chromium.org>
 S:	Maintained
 F:	board/emulation/configs/acpi.config
 F:	cmd/acpi.c
+F:	include/acpi/
 F:	lib/acpi/
 
 ANDROID AB
@@ -223,7 +224,6 @@ ARM BROADCOM BCMBCA
 M:	Anand Gore <anand.gore@broadcom.com>
 M:	William Zhang <william.zhang@broadcom.com>
 M:	Kursad Oney <kursad.oney@broadcom.com>
-M:	Joel Peshkin <joel.peshkin@broadcom.com>
 M:	Philippe Reynes <philippe.reynes@softathome.com>
 S:	Maintained
 F:	arch/arm/mach-bcmbca/
@@ -602,19 +602,21 @@ ARM SNAPDRAGON
 M:	Caleb Connolly <caleb.connolly@linaro.org>
 M:	Neil Armstrong <neil.armstrong@linaro.org>
 R:	Sumit Garg <sumit.garg@linaro.org>
+L:	u-boot-qcom@groups.io
 S:	Maintained
-F:	arch/arm/mach-snapdragon/
-F:	drivers/button/button-qcom-pmic.c
-F:	drivers/clk/qcom/
+T:	git https://source.denx.de/u-boot/custodians/u-boot-snapdragon.git
+F:	drivers/*/*/pm8???-*
 F:	drivers/gpio/msm_gpio.c
 F:	drivers/mmc/msm_sdhci.c
 F:	drivers/phy/msm8916-usbh-phy.c
-F:	drivers/pinctrl/qcom/
 F:	drivers/serial/serial_msm.c
 F:	drivers/serial/serial_msm_geni.c
 F:	drivers/smem/msm_smem.c
 F:	drivers/spmi/spmi-msm.c
 F:	drivers/usb/host/ehci-msm.c
+N:	qcom
+N:	snapdragon
+N:	qualcomm
 
 ARM STI
 M:	Patrice Chotard <patrice.chotard@foss.st.com>
@@ -678,13 +680,6 @@ F:	tools/logos/st.bmp
 F:	tools/stm32image.c
 N:	stm
 N:	stm32
-
-
-ARM STM STV0991
-M:	Vikas Manocha <vikas.manocha@st.com>
-S:	Maintained
-F:	arch/arm/cpu/armv7/stv0991/
-F:	arch/arm/include/asm/arch-stv0991/
 
 ARM SUNXI
 M:	Jagan Teki <jagan@amarulasolutions.com>
@@ -988,6 +983,11 @@ S:	Maintained
 F:	cmd/cyclic.c
 F:	common/cyclic.c
 F:	include/cyclic.h
+
+DEVICETREE REBASING SUBTREE
+M:	Sumit Garg <sumit.garg@linaro.org>
+S:	Maintained
+F:	dts/upstream/
 
 DFU
 M:	Lukasz Majewski <lukma@denx.de>
@@ -1369,6 +1369,12 @@ M:	Simon Glass <sjg@chromium.org>
 S:	Maintained
 F:	tools/patman/
 
+PCIe DWC IMX
+M:	Sumit Garg <sumit.garg@linaro.org>
+S:	Maintained
+F:	drivers/pci/pcie_dw_imx.c
+F:	drivers/phy/phy-imx8m-pcie.c
+
 PCI Endpoint
 M:	Ramon Fried <rfried.dev@gmail.com>
 S:	Maintained
@@ -1561,7 +1567,7 @@ F:	cmd/sqfs.c
 F:	test/py/tests/test_fs/test_squashfs/
 
 STACKPROTECTOR
-M:	Joel Peshkin <joel.peshkin@broadcom.com>
+M:	William Zhang <william.zhang@broadcom.com>
 S:	Maintained
 F:	common/stackprot.c
 F:	cmd/stackprot_test.c
@@ -1633,9 +1639,18 @@ M:	Jens Wiklander <jens.wiklander@linaro.org>
 M:	Ilias Apalodimas <ilias.apalodimas@linaro.org>
 T:	git https://source.denx.de/u-boot/custodians/u-boot-tpm.git
 S:	Maintained
+F:	cmd/optee*
+F:	doc/README.tee
+F:	doc/device-tree-bindings/firmware/linaro,optee-tz.txt
+F:	drivers/firmware/scmi/optee_agent.c
 F:	drivers/tee/
+F:	include/sandboxtee.h
 F:	include/tee.h
 F:	include/tee/
+F:	include/test/optee.h
+F:	test/dm/tee.c
+F:	test/optee/
+F:	test/py/tests/test_optee_rpmb.py
 
 TEE-lib
 M:	Bryan O'Donoghue <bryan.odonoghue@linaro.org>

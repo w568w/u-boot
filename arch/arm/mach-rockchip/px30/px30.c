@@ -9,7 +9,6 @@
 #include <init.h>
 #include <spl.h>
 #include <asm/armv8/mmu.h>
-#include <asm/io.h>
 #include <asm/arch-rockchip/bootrom.h>
 #include <asm/arch-rockchip/grf_px30.h>
 #include <asm/arch-rockchip/hardware.h>
@@ -20,6 +19,7 @@
 
 const char * const boot_devices[BROM_LAST_BOOTSOURCE + 1] = {
 	[BROM_BOOTSOURCE_EMMC] = "/mmc@ff390000",
+	[BROM_BOOTSOURCE_SPINOR] = "/spi@ff3a0000/flash@0",
 	[BROM_BOOTSOURCE_SD] = "/mmc@ff370000",
 };
 

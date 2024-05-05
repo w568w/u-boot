@@ -121,12 +121,12 @@ void board_init_f(ulong dummy)
 
 	preloader_console_init();
 
-	ret = imx9_probe_mu(NULL, NULL);
+	ret = imx9_probe_mu();
 	if (ret) {
 		printf("Fail to init ELE API\n");
 	} else {
-		printf("SOC: 0x%x\n", gd->arch.soc_rev);
-		printf("LC: 0x%x\n", gd->arch.lifecycle);
+		debug("SOC: 0x%x\n", gd->arch.soc_rev);
+		debug("LC: 0x%x\n", gd->arch.lifecycle);
 	}
 	power_init_board();
 
