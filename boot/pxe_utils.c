@@ -4,7 +4,6 @@
  * Copyright (c) 2014, NVIDIA CORPORATION.  All rights reserved.
  */
 
-#include <common.h>
 #include <command.h>
 #include <dm.h>
 #include <env.h>
@@ -21,9 +20,7 @@
 #include <errno.h>
 #include <linux/list.h>
 
-#ifdef CONFIG_DM_RNG
 #include <rng.h>
-#endif
 
 #include <splash.h>
 #include <asm/io.h>
@@ -323,7 +320,7 @@ static int label_localboot(struct pxe_label *label)
 
 static void label_boot_kaslrseed(void)
 {
-#ifdef CONFIG_DM_RNG
+#if CONFIG_IS_ENABLED(DM_RNG)
 	ulong fdt_addr;
 	struct fdt_header *working_fdt;
 	size_t n = 0x8;

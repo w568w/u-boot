@@ -3,7 +3,6 @@
  * (C) Copyright 2017 Rockchip Electronics Co., Ltd
  */
 
-#include <common.h>
 #include <bitfield.h>
 #include <clk-uclass.h>
 #include <dm.h>
@@ -706,6 +705,9 @@ static ulong rk3328_clk_get_rate(struct clk *clk)
 	case PCLK_HDMIPHY:
 		rate = rk3328_hdmiphy_get_clk(priv->cru);
 		break;
+	case SCLK_USB3OTG_REF:
+		rate = OSC_HZ;
+		break;
 	default:
 		return -ENOENT;
 	}
@@ -780,6 +782,7 @@ static ulong rk3328_clk_set_rate(struct clk *clk, ulong rate)
 	case PCLK_DDR:
 	case ACLK_GMAC:
 	case PCLK_GMAC:
+	case SCLK_USB3OTG_REF:
 	case SCLK_USB3OTG_SUSPEND:
 	case USB480M:
 		return 0;
