@@ -13,11 +13,11 @@
  * It is based on the U-Boot driver tpm_tis_infineon_i2c.c.
  */
 
+#include <common.h>
 #include <dm.h>
 #include <fdtdec.h>
 #include <log.h>
 #include <spi.h>
-#include <time.h>
 #include <tpm-v2.h>
 #include <linux/bitops.h>
 #include <linux/delay.h>
@@ -237,19 +237,22 @@ static int tpm_tis_spi_probe(struct udevice *dev)
 			/* legacy reset */
 			ret = gpio_request_by_name(dev, "gpio-reset", 0,
 						   &reset_gpio, GPIOD_IS_OUT);
-			if (ret) {
+			if (!ret) {
 				log(LOGC_NONE, LOGL_NOTICE,
-				    "%s: missing reset GPIO\n", __func__);
-				goto init;
+				    "%s: gpio-reset is deprecated\n", __func__);
 			}
-			log(LOGC_NONE, LOGL_NOTICE,
-			    "%s: gpio-reset is deprecated\n", __func__);
 		}
-		dm_gpio_set_value(&reset_gpio, 1);
-		mdelay(1);
-		dm_gpio_set_value(&reset_gpio, 0);
+
+		if (!ret) {
+			log(LOGC_NONE, LOGL_WARNING,
+			    "%s: TPM gpio reset should not be used on secure production devices\n",
+			    dev->name);
+			dm_gpio_set_value(&reset_gpio, 1);
+			mdelay(1);
+			dm_gpio_set_value(&reset_gpio, 0);
+		}
 	}
-init:
+
 	/* Ensure a minimum amount of time elapsed since reset of the TPM */
 	mdelay(drv_data->time_before_first_cmd_ms);
 

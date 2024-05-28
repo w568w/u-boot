@@ -18,6 +18,7 @@
  * Manjunatha C Achar <a.manjunatha@samsung.com>
  */
 
+#include <common.h>
 #include <part.h>
 
 #include <command.h>
@@ -31,6 +32,7 @@
 #include <ext4fs.h>
 #include <mmc.h>
 #include <scsi.h>
+#include <virtio.h>
 #include <asm/global_data.h>
 
 DECLARE_GLOBAL_DATA_PTR;
@@ -149,6 +151,10 @@ static int env_ext4_load(void)
 #if defined(CONFIG_AHCI) || defined(CONFIG_SCSI)
 	if (!strcmp(ifname, "scsi"))
 		scsi_scan(true);
+#endif
+#if defined(CONFIG_VIRTIO)
+	if (!strcmp(ifname, "virtio"))
+		virtio_init();
 #endif
 
 	part = blk_get_device_part_str(ifname, dev_and_part,
