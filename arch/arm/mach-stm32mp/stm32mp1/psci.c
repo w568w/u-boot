@@ -4,7 +4,6 @@
  */
 
 #include <config.h>
-#include <common.h>
 #include <asm/armv7.h>
 #include <asm/cache.h>
 #include <asm/gic.h>
@@ -13,6 +12,7 @@
 #include <asm/secure.h>
 #include <hang.h>
 #include <linux/bitops.h>
+#include <linux/errno.h>
 
 /* PWR */
 #define PWR_CR3					0x0c
@@ -807,6 +807,27 @@ void __secure psci_system_suspend(u32 __always_unused function_id,
 
 	writel(SYSCFG_CMPENR_MPUEN, STM32_SYSCFG_BASE + SYSCFG_CMPENSETR);
 	clrbits_le32(STM32_SYSCFG_BASE + SYSCFG_CMPCR, SYSCFG_CMPCR_SW_CTRL);
+
+	/*
+	 * Make sure the OS would not get any spurious IWDG pretimeout IRQ
+	 * right after the system wakes up. This may happen in case the SoC
+	 * got woken up by another source than the IWDG pretimeout and the
+	 * pretimeout IRQ arrived immediately afterward, but too late to be
+	 * handled by the main loop above. In case either of the IWDG is
+	 * enabled, ping it first and then return to the OS.
+	 */
+
+	/* Ping IWDG1 and ACK pretimer IRQ */
+	if (gic_enabled[4] & BIT(22)) {
+		writel(IWDG_KR_RELOAD_KEY, STM32_IWDG1_BASE + IWDG_KR);
+		writel(IWDG_EWCR_EWIC, STM32_IWDG1_BASE + IWDG_EWCR);
+	}
+
+	/* Ping IWDG2 and ACK pretimer IRQ */
+	if (gic_enabled[4] & BIT(23)) {
+		writel(IWDG_KR_RELOAD_KEY, STM32_IWDG2_BASE + IWDG_KR);
+		writel(IWDG_EWCR_EWIC, STM32_IWDG2_BASE + IWDG_EWCR);
+	}
 
 	/*
 	 * The system has resumed successfully. Rewrite LR register stored

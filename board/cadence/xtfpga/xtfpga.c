@@ -4,7 +4,7 @@
  * (C) Copyright 2014 - 2016 Cadence Design Systems Inc.
  */
 
-#include <common.h>
+#include <config.h>
 #include <clock_legacy.h>
 #include <command.h>
 #include <dm.h>
@@ -64,6 +64,11 @@ unsigned long get_board_sys_clk(void)
 	/* early Tensilica bitstreams lack this reg, but most run at 50 MHz */
 	return 50000000;
 #endif
+}
+
+int dram_init(void)
+{
+	return 0;
 }
 
 int board_postclk_init(void)

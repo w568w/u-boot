@@ -100,6 +100,7 @@ enum {
 	IH_OS_TEE,			/* Trusted Execution Environment */
 	IH_OS_OPENSBI,			/* RISC-V OpenSBI */
 	IH_OS_EFI,			/* EFI Firmware (e.g. GRUB2) */
+	IH_OS_ELF,			/* ELF Image (e.g. seL4) */
 
 	IH_OS_COUNT,
 };
@@ -1969,6 +1970,13 @@ bool is_android_vendor_boot_image_header(const void *vendor_boot_img);
  * Return: Android boot image address
  */
 ulong get_abootimg_addr(void);
+
+/**
+ * get_ainit_bootimg_addr() - Get Android init boot image address
+ *
+ * Return: Android init boot image address
+ */
+ulong get_ainit_bootimg_addr(void);
 
 /**
  * get_avendor_bootimg_addr() - Get Android vendor boot image address

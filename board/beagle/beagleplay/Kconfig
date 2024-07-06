@@ -12,6 +12,7 @@ config TARGET_AM625_A53_BEAGLEPLAY
 	bool "BeagleBoard.org AM625 BeaglePlay running on A53"
 	select ARM64
 	select BINMAN
+	select OF_SYSTEM_SETUP
 
 config TARGET_AM625_R5_BEAGLEPLAY
 	bool "BeagleBoard.org AM625 BeaglePlay running on R5"
@@ -35,7 +36,7 @@ config SYS_VENDOR
        default "beagle"
 
 config SYS_CONFIG_NAME
-       default "am62x_evm"
+       default "beagleplay"
 
 source "board/ti/common/Kconfig"
 
@@ -50,7 +51,7 @@ config SYS_VENDOR
        default "beagle"
 
 config SYS_CONFIG_NAME
-       default "am62x_evm"
+       default "beagleplay"
 
 config SPL_LDSCRIPT
 	default "arch/arm/mach-omap2/u-boot-spl.lds"

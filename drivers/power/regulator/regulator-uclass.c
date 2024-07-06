@@ -6,7 +6,6 @@
 
 #define LOG_CATEGORY UCLASS_REGULATOR
 
-#include <common.h>
 #include <errno.h>
 #include <dm.h>
 #include <log.h>
@@ -518,7 +517,7 @@ int regulators_enable_boot_on(bool verbose)
 	     dev;
 	     uclass_next_device(&dev)) {
 		ret = regulator_autoset(dev);
-		if (ret == -EMEDIUMTYPE) {
+		if (ret == -EMEDIUMTYPE || ret == -EALREADY) {
 			ret = 0;
 			continue;
 		}

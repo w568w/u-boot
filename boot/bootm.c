@@ -5,7 +5,6 @@
  */
 
 #ifndef USE_HOSTCC
-#include <common.h>
 #include <bootm.h>
 #include <bootstage.h>
 #include <cli.h>
@@ -25,6 +24,7 @@
 #include <asm/io.h>
 #include <linux/sizes.h>
 #include <tpm-v2.h>
+#include <tpm_tcg2.h>
 #if defined(CONFIG_CMD_USB)
 #include <usb.h>
 #endif
@@ -964,7 +964,7 @@ int bootm_measure(struct bootm_headers *images)
 			goto unmap_initrd;
 
 		if (IS_ENABLED(CONFIG_MEASURE_DEVICETREE)) {
-			ret = tcg2_measure_data(dev, &elog, 0, images->ft_len,
+			ret = tcg2_measure_data(dev, &elog, 1, images->ft_len,
 						(u8 *)images->ft_addr,
 						EV_TABLE_OF_DEVICES,
 						strlen("dts") + 1,

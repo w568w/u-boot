@@ -9,7 +9,7 @@ SoM (System on Module) featuring TI's AM64x SoC. It can be used in combination
 with different carrier boards. This module can come with different sizes and
 models for DDR, eMMC, SPI NOR Flash and various SoCs from the AM64x family.
 
-A development Kit, called `phyBOARD-Lyra <https://www.phytec.com/product/phyboard-am64x>`_
+A development Kit, called `phyBOARD-Electra <https://www.phytec.com/product/phyboard-am64x>`_
 is used as a carrier board reference design around the AM64x SoM.
 
 Quickstart
@@ -111,14 +111,33 @@ tiboot3.bin, tispl.bin and u-boot.img are stored on the uSD card.
 
 .. code-block:: bash
 
-  sf probe
+  mtd list
   fatload mmc 1 ${loadaddr} tiboot3.bin
-  sf update $loadaddr 0x0 $filesize
+  mtd write ospi.tiboot3 ${loadaddr} 0 ${filesize}
   fatload mmc 1 ${loadaddr} tispl.bin
-  sf update $loadaddr 0x80000 $filesize
+  mtd write ospi.tispl ${loadaddr} 0 ${filesize}
   fatload mmc 1 ${loadaddr} u-boot.img
-  sf update $loadaddr 0x280000 $filesize
+  mtd write ospi.u-boot ${loadaddr} 0 ${filesize}
 
+UART based boot
+---------------
+
+To boot the board via UART, set the switches to UART mode and connect to the
+micro USB port labeled as "Debug UART". After power-on the build artifacts
+needs to be uploaded one by one with a tool like sz.
+
+Example bash script sequence for running on a Linux host PC feeding all boot
+artifacts needed to the device. Assuming the host uses /dev/ttyUSB0 as
+the main domain serial port:
+
+.. prompt:: bash $
+
+  stty -F /dev/ttyUSB0 115200
+  sb --xmodem tiboot3.bin > /dev/ttyUSB0 < /dev/ttyUSB0
+  # Resend tiboot3.bin a 2nd time due to ErrataID:i2331
+  sb --xmodem tiboot3.bin > /dev/ttyUSB0 < /dev/ttyUSB0
+  sb --ymodem tispl.bin > /dev/ttyUSB0 < /dev/ttyUSB0
+  sb --ymodem u-boot.img > /dev/ttyUSB0 < /dev/ttyUSB0
 
 Boot Modes
 ----------
@@ -156,4 +175,4 @@ Further Information
 -------------------
 
 Please see :doc:`../ti/am64x_evm` chapter for further AM64 SoC related documentation
-and https://docs.phytec.com/phycore-am64x for vendor documentation.
+and https://docs.phytec.com/projects/yocto-phycore-am64x/en/latest/ for vendor documentation.

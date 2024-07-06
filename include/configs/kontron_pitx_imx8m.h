@@ -18,15 +18,12 @@
 #define CFG_MALLOC_F_ADDR		0x182000
 /* For RAW image gives a error info not panic */
 
-
 #define CFG_POWER_PFUZE100_I2C_ADDR  0x08
 #endif
 
 /* ENET1 Config */
 #if defined(CONFIG_CMD_NET)
 #define CFG_FEC_MXC_PHYADDR          0
-
-#define PHY_ANEG_TIMEOUT		20000
 
 #endif
 
@@ -57,7 +54,6 @@
 	"dfu_alt_info=mmc 0=flash-bin raw 0x42 0x1000 mmcpart 1\0"\
 	ENV_MEM_LAYOUT_SETTINGS \
 	BOOTENV
-
 
 #define CFG_SYS_INIT_RAM_ADDR        0x40000000
 #define CFG_SYS_INIT_RAM_SIZE        0x80000

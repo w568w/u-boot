@@ -271,7 +271,7 @@ config CMD_BOOTM_PRE_LOAD
        depends on CMD_BOOTM
        depends on IMAGE_PRE_LOAD
        help
-         Enable support of stage pre-load for the bootm command.
+	 Enable support of stage pre-load for the bootm command.
 	 This stage allow to check or modify the image provided
 	 to the bootm command.
 
@@ -308,7 +308,7 @@ config CMD_BOOTMETH
 	depends on BOOTSTD
 	default y if BOOTSTD_FULL
 	help
-	  Support listing available bootmethds (methods used to boot an
+	  Support listing available bootmeths (methods used to boot an
 	  Operating System), as well as selecting the order that the bootmeths
 	  are used.
 
@@ -320,6 +320,13 @@ config BOOTM_EFI
 	default y
 	help
 	  Support booting UEFI FIT images via the bootm command.
+
+config BOOTM_ELF
+	bool "Support booting ELF images"
+	depends on CMD_BOOTM && LIB_ELF
+	default n
+	help
+	  Support booting ELF images via the bootm command.
 
 config CMD_BOOTZ
 	bool "bootz"
@@ -539,6 +546,7 @@ config CMD_IMI
 
 config CMD_IMLS
 	bool "imls"
+	depends on MTD_NOR_FLASH || FLASH_CFI_DRIVER
 	help
 	  List all images found in flash
 
@@ -621,7 +629,7 @@ config CMD_ZBOOT
 
 	  Consider using FIT in preference to this since it supports directly
 	  booting both 32- and 64-bit kernels, as well as secure boot.
-	  Documentation is available in doc/uImage.FIT/x86-fit-boot.txt
+	  Documentation is available in doc/usage/fit/x86-fit-boot.rst.
 
 endmenu
 
@@ -803,9 +811,16 @@ config CMD_EEPROM_LAYOUT
 			types of eeprom fields. Can be used for defining
 			custom layouts.
 
+config EEPROM_LAYOUT_VERSIONS
+	bool "Support specifying eeprom layout version"
+	depends on CMD_EEPROM_LAYOUT
+	help
+	  Support specifying eeprom layout version in the 'eeprom' command
+	  via the -l option.
+
 config EEPROM_LAYOUT_HELP_STRING
 	  string "Tells user what layout names are supported"
-	  depends on CMD_EEPROM_LAYOUT
+	  depends on EEPROM_LAYOUT_VERSIONS
 	  default "<not defined>"
 	  help
 	    Help printed with the LAYOUT VERSIONS part of the 'eeprom'
@@ -831,7 +846,7 @@ config SYS_EEPROM_SIZE
 
 config SYS_EEPROM_PAGE_WRITE_BITS
 	int "Number of bits used to address bytes in a single page"
-	depends on CMD_EEPROM
+	depends on CMD_EEPROM || ENV_IS_IN_EEPROM
 	default 8
 	help
 	  The EEPROM page size is 2^SYS_EEPROM_PAGE_WRITE_BITS.
@@ -897,9 +912,9 @@ config CMD_MX_CYCLIC
 	bool "Enable cyclic md/mw commands"
 	depends on CMD_MEMORY
 	help
-          Add the "mdc" and "mwc" memory commands. These are cyclic
-          "md/mw" commands.
-          Examples:
+	  Add the "mdc" and "mwc" memory commands. These are cyclic
+	  "md/mw" commands.
+	  Examples:
 
 	  => mdc.b 10 4 500
 	  This command will print 4 bytes (10,11,12,13) each 500 ms.
@@ -1023,8 +1038,8 @@ config CMD_ARMFFA
 		- Displaying the arm_ffa device info
 
 config CMD_ARMFLASH
-	#depends on FLASH_CFI_DRIVER
 	bool "armflash"
+	depends on FLASH_CFI_DRIVER
 	help
 	  ARM Ltd reference designs flash partition access
 
@@ -1167,6 +1182,7 @@ config CMD_FPGA_LOAD_SECURE
 
 config CMD_FPGAD
 	bool "fpgad - dump FPGA registers"
+	depends on GDSYS_LEGACY_DRIVERS
 	help
 	  (legacy, needs conversion to driver model)
 	  Provides a way to dump FPGA registers by calling the board-specific
@@ -1602,6 +1618,7 @@ config CMD_TEMPERATURE
 
 config CMD_TSI148
 	bool "tsi148 - Command to access tsi148 device"
+	depends on DM_PCI_COMPAT
 	help
 	  This provides various sub-commands to initialise and configure the
 	  Turndra tsi148 device. See the command help for full details.
@@ -1615,6 +1632,7 @@ config CMD_UFS
 
 config CMD_UNIVERSE
 	bool "universe - Command to set up the Turndra Universe controller"
+	depends on DM_PCI_COMPAT
 	help
 	  This allows setting up the VMEbus provided by this controller.
 	  See the command help for full details.
@@ -2150,12 +2168,12 @@ config CMD_BLKMAP
 
 	  Example use-cases:
 	  - Treat a region of RAM as a block device, i.e. a RAM disk. This let's
-            you extract files from filesystem images stored in RAM (perhaps as a
-            result of a TFTP transfer).
+	    you extract files from filesystem images stored in RAM (perhaps as a
+	    result of a TFTP transfer).
 	  - Create a virtual partition on an existing device. This let's you
-            access filesystems that aren't stored at an exact partition
-            boundary. A common example is a filesystem image embedded in an FIT
-            image.
+	    access filesystems that aren't stored at an exact partition
+	    boundary. A common example is a filesystem image embedded in an FIT
+	    image.
 
 config CMD_BUTTON
 	bool "button"
@@ -2934,7 +2952,7 @@ config CMD_UBI_RENAME
        bool "Enable rename"
        depends on CMD_UBI
        help
-         Enable a "ubi" command to rename ubi volume:
+	 Enable a "ubi" command to rename ubi volume:
 	   ubi rename <oldname> <newname>
 
 config CMD_UBIFS
