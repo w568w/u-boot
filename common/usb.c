@@ -190,7 +190,6 @@ int usb_disable_asynch(int disable)
 }
 #endif /* !CONFIG_IS_ENABLED(DM_USB) */
 
-
 /*-------------------------------------------------------------------
  * Message wrappers.
  *
@@ -214,8 +213,9 @@ int usb_int_msg(struct usb_device *dev, unsigned long pipe,
  * clear keyboards LEDs). For data transfers, (storage transfers) we don't
  * allow control messages with 0 timeout, by previousely resetting the flag
  * asynch_allowed (usb_disable_asynch(1)).
- * returns the transferred length if OK or -1 if error. The transferred length
- * and the current status are stored in the dev->act_len and dev->status.
+ * returns the transferred length if OK, otherwise a negative error code. The
+ * transferred length and the current status are stored in the dev->act_len and
+ * dev->status.
  */
 int usb_control_msg(struct usb_device *dev, unsigned int pipe,
 			unsigned char request, unsigned char requesttype,
@@ -257,11 +257,14 @@ int usb_control_msg(struct usb_device *dev, unsigned int pipe,
 			break;
 		mdelay(1);
 	}
+
+	if (timeout == 0)
+		return -ETIMEDOUT;
+
 	if (dev->status)
 		return -1;
 
 	return dev->act_len;
-
 }
 
 /*-------------------------------------------------------------------
@@ -288,7 +291,6 @@ int usb_bulk_msg(struct usb_device *dev, unsigned int pipe,
 	else
 		return -EIO;
 }
-
 
 /*-------------------------------------------------------------------
  * Max Packet stuff
@@ -555,17 +557,35 @@ int usb_clear_halt(struct usb_device *dev, int pipe)
 	return 0;
 }
 
-
 /**********************************************************************
  * get_descriptor type
  */
 static int usb_get_descriptor(struct usb_device *dev, unsigned char type,
 			unsigned char index, void *buf, int size)
 {
-	return usb_control_msg(dev, usb_rcvctrlpipe(dev, 0),
-			       USB_REQ_GET_DESCRIPTOR, USB_DIR_IN,
-			       (type << 8) + index, 0, buf, size,
-			       USB_CNTL_TIMEOUT);
+	int i;
+	int result;
+
+	if (size <= 0)		/* No point in asking for no data */
+		return -EINVAL;
+
+	memset(buf, 0, size);	/* Make sure we parse really received data */
+
+	for (i = 0; i < 3; ++i) {
+		/* retry on length 0 or error; some devices are flakey */
+		result = usb_control_msg(dev, usb_rcvctrlpipe(dev, 0),
+					 USB_REQ_GET_DESCRIPTOR, USB_DIR_IN,
+					 (type << 8) + index, 0, buf, size,
+					 USB_CNTL_TIMEOUT);
+		if (result <= 0 && result != -ETIMEDOUT)
+			continue;
+		if (result > 1 && ((u8 *)buf)[1] != type) {
+			result = -ENODATA;
+			continue;
+		}
+		break;
+	}
+	return result;
 }
 
 /**********************************************************************
@@ -745,7 +765,6 @@ static int usb_get_string(struct usb_device *dev, unsigned short langid,
 	return result;
 }
 
-
 static void usb_try_string_workarounds(unsigned char *buf, int *length)
 {
 	int newlength, oldlength = *length;
@@ -759,7 +778,6 @@ static void usb_try_string_workarounds(unsigned char *buf, int *length)
 		*length = newlength;
 	}
 }
-
 
 static int usb_string_sub(struct usb_device *dev, unsigned int langid,
 		unsigned int index, unsigned char *buf)
@@ -794,7 +812,6 @@ static int usb_string_sub(struct usb_device *dev, unsigned int langid,
 
 	return rc;
 }
-
 
 /********************************************************************
  * usb_string:
@@ -850,7 +867,6 @@ int usb_string(struct usb_device *dev, int index, char *buf, size_t size)
 	err = idx;
 	return err;
 }
-
 
 /********************************************************************
  * USB device handling:
@@ -1364,6 +1380,5 @@ void usb_find_usb2_hub_address_port(struct usb_device *udev,
 	*hub_port = 0;
 }
 #endif
-
 
 /* EOF */

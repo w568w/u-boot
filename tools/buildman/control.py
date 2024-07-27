@@ -124,7 +124,8 @@ def show_actions(series, why_selected, boards_selected, output_dir,
             print(commit.subject)
     print()
     for arg in why_selected:
-        if arg != 'all':
+        # When -x is used, only the 'all' member exists
+        if arg != 'all' or len(why_selected) == 1:
             print(arg, f': {len(why_selected[arg])} boards')
             if verbose:
                 print(f"   {' '.join(why_selected[arg])}")
@@ -788,8 +789,10 @@ def do_buildman(args, toolchains=None, make_func=None, brds=None,
     builder = Builder(toolchains, output_dir, git_dir,
             args.threads, args.jobs, checkout=True,
             show_unknown=args.show_unknown, step=args.step,
-            no_subdirs=args.no_subdirs, verbose_build=args.verbose_build,
-            mrproper=args.mrproper, fallback_mrproper=args.fallback_mrproper,
+            no_subdirs=args.no_subdirs, full_path=args.full_path,
+            verbose_build=args.verbose_build,
+            mrproper=args.mrproper,
+            fallback_mrproper=args.fallback_mrproper,
             per_board_out_dir=args.per_board_out_dir,
             config_only=args.config_only,
             squash_config_y=not args.preserve_config_y,

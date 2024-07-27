@@ -392,7 +392,6 @@ static int asix_init_common(struct ueth_data *dev,
 	u8 buf[2], tmp[5], link_sts;
 	u16 *tmp16, mode;
 
-
 	tmp16 = (u16 *)buf;
 
 	debug("** %s()\n", __func__);
@@ -628,6 +627,12 @@ static int ax88179_eth_probe(struct udevice *dev)
 
 	usb_dev = priv->ueth.pusb_dev;
 	priv->maxpacketsize = usb_dev->epmaxpacketout[AX_ENDPOINT_OUT];
+
+	ret = asix_basic_reset(&priv->ueth, priv);
+	if (ret) {
+		printf("Failed to reset ethernet device\n");
+		return ret;
+	}
 
 	/* Get the MAC address */
 	ret = asix_read_mac(&priv->ueth, pdata->enetaddr);

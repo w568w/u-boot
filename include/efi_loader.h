@@ -21,16 +21,6 @@
 struct blk_desc;
 struct jmp_buf_data;
 
-static inline int guidcmp(const void *g1, const void *g2)
-{
-	return memcmp(g1, g2, sizeof(efi_guid_t));
-}
-
-static inline void *guidcpy(void *dst, const void *src)
-{
-	return memcpy(dst, src, sizeof(efi_guid_t));
-}
-
 #if CONFIG_IS_ENABLED(EFI_LOADER)
 
 /**
@@ -1205,6 +1195,6 @@ efi_status_t efi_load_option_dp_join(struct efi_device_path **dp,
 
 int efi_get_distro_fdt_name(char *fname, int size, int seq);
 
-void efi_load_distro_fdt(void **fdt, efi_uintn_t *fdt_size);
+void efi_load_distro_fdt(efi_handle_t handle, void **fdt, efi_uintn_t *fdt_size);
 
 #endif /* _EFI_LOADER_H */

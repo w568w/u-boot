@@ -494,6 +494,23 @@ config BOOTMETH_GLOBAL
 	  EFI bootmgr, since they take full control over which bootdevs are
 	  selected to boot.
 
+config BOOTMETH_ANDROID
+	bool "Bootdev support for Android"
+	depends on X86 || ARM || SANDBOX
+	depends on CMDLINE
+	select ANDROID_AB
+	select ANDROID_BOOT_IMAGE
+	select CMD_BCB
+	select CMD_FASTBOOT
+	select PARTITION_TYPE_GUID
+	select PARTITION_UUIDS
+	help
+	  Enables support for booting Android using bootstd. Android requires
+	  multiple partitions (misc, boot, vbmeta, ...) in storage for booting.
+
+	  Note that only MMC bootdevs are supported at present. This is caused
+	  by AVB being limited to MMC devices only.
+
 config BOOTMETH_CROS
 	bool "Bootdev support for Chromium OS"
 	depends on X86 || ARM || SANDBOX
@@ -567,6 +584,15 @@ config BOOTMETH_EFI_BOOTMGR
 	  Enable booting via the UEFI boot manager. Based on the EFI variables
 	  the EFI binary to be launched is determined. To set the EFI variables
 	  use the eficonfig command.
+
+config BOOTMETH_QFW
+	bool "Boot method using QEMU parameters"
+	depends on QFW
+	default y
+	help
+	 Use QEMU parameters -kernel, -initrd, -append to determine the kernel,
+	 initial RAM disk, and kernel command line parameters to boot an
+	 operating system. U-Boot's control device-tree is passed to the kernel.
 
 config BOOTMETH_VBE
 	bool "Bootdev support for Verified Boot for Embedded"
@@ -816,7 +842,7 @@ choice
 	prompt "Freescale PBL (or predecessor) load location"
 	depends on RAMBOOT_PBL || ((TARGET_P1010RDB_PA || TARGET_P1010RDB_PB \
 		|| TARGET_P1020RDB_PC || TARGET_P1020RDB_PD || TARGET_P2020RDB) \
-		&& !CMD_NAND)
+		&& !CMD_NAND) || (TARGET_TURRIS_1X && SYS_MPC85XX_NO_RESETVEC)
 
 config SDCARD
 	bool "Freescale PBL (or similar) is found on SD card"
@@ -1002,13 +1028,17 @@ config BOOTSTAGE_STASH
 
 config BOOTSTAGE_STASH_ADDR
 	hex "Address to stash boot timing information"
-	default 0x0
+	depends on BOOTSTAGE_STASH
+	default 0xC3000000 if STM32MP13X || STM32MP15X
+	default 0x87000000 if STM32MP25X
+	default 0x0 if SANDBOX
 	help
 	  Provide an address which will not be overwritten by the OS when it
 	  starts, so that it can read this information when ready.
 
 config BOOTSTAGE_STASH_SIZE
 	hex "Size of boot timing stash region"
+	depends on BOOTSTAGE_STASH
 	default 0x1000
 	help
 	  This should be large enough to hold the bootstage stash. A value of

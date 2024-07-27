@@ -324,7 +324,7 @@ config BOOTM_EFI
 config BOOTM_ELF
 	bool "Support booting ELF images"
 	depends on CMD_BOOTM && LIB_ELF
-	default n
+	default y if LIB_ELF
 	help
 	  Support booting ELF images via the bootm command.
 
@@ -500,8 +500,7 @@ config CMD_ELF
 config CMD_ELF_FDT_SETUP
 	bool "Flattened Device Tree setup in bootelf cmd"
 	depends on CMD_ELF
-	select LIB_LIBFDT
-	select LMB
+	select OF_LIBFDT
 	help
 	  Do FDT setup in bootelf command optionally by param -d, which
 	  allows to bring additional system info (e.g. /memory node) to
@@ -1810,6 +1809,23 @@ config CMD_DHCP6
 	  Will perform 4-message exchange with DHCPv6 server, requesting
 	  the minimum required options to TFTP boot. Complies with RFC 8415.
 
+if CMD_DHCP6
+
+config DHCP6_PXE_CLIENTARCH
+	hex
+	default 0x16 if ARM64
+	default 0x15 if ARM
+	default 0xFF
+
+config DHCP6_PXE_DHCP_OPTION
+	bool "Request & store 'pxe_configfile' from DHCP6 server"
+
+config DHCP6_ENTERPRISE_ID
+	int "Enterprise ID to send in DHCPv6 Vendor Class Option"
+	default 0
+
+endif
+
 config BOOTP_MAY_FAIL
 	bool "Allow for the BOOTP/DHCP server to not be found"
 	depends on CMD_BOOTP
@@ -1926,23 +1942,6 @@ config BOOTP_VCI_STRING
 	default "U-Boot.armv8" if ARM64
 	default "U-Boot.arm" if ARM
 	default "U-Boot"
-
-if CMD_DHCP6
-
-config DHCP6_PXE_CLIENTARCH
-	hex
-	default 0x16 if ARM64
-	default 0x15 if ARM
-	default 0xFF
-
-config DHCP6_PXE_DHCP_OPTION
-	bool "Request & store 'pxe_configfile' from DHCP6 server"
-
-config DHCP6_ENTERPRISE_ID
-	int "Enterprise ID to send in DHCPv6 Vendor Class Option"
-	default 0
-
-endif
 
 config CMD_TFTPBOOT
 	bool "tftpboot"
