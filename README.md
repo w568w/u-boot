@@ -1,3 +1,8 @@
+# !! Discontinued Announcement !!
+Since the upstream U-Boot started to support Orange Pi 3B since <https://github.com/u-boot/u-boot/commit/a52099b4a2ae9e8cafc79268325249bcad308012>, I am going too stop maintaining the patches in this repo. 
+
+Please refer to the upstream implementation and report bugs to the upstream. Thanks!
+
 # U-Boot for Orange Pi 3B
 
 U-Boot patched for Orange Pi 3B.
